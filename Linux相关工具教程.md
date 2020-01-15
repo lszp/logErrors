@@ -133,3 +133,45 @@ tmux默认的快捷键前缀是**Ctrl+b**(下文用**prefix**指代)，按下前
 
 ### 在搜索框中输入renderWhitespace,选择all,即可显示空格.
 
+# 3.git
+
+## 3.1 设置姓名和邮箱
+
+```bash
+git config --global user.name "your name"
+git config --global user.email "youremail@qq.com"
+```
+
+## 3.2 设置SSH Key，添加公开密钥
+
+```bash
+ssh-keygen -t rsa -C "youremail@qq.com"
+```
+
+邮箱为创建账户时的邮箱地址，密码需要在认证时输入id_rsa文件是私有秘钥，id_rsa.pub是公开秘钥
+
+windows版本：将会在目录C:\Users\zp\.ssh/ 生成 id_rsa 和 id_rsa.pub 文件。
+
+linux版本：将在用户目录下~/.ssh/ 生成 id_rsa 和 id_rsa.pub 文件。
+
+在github账户设置中添加SSH Key, 在Title中输入适当名称，在Key部分粘贴id_rsa.pub文件里的内容。
+
+## 3.3 创建本地仓库、提交远程仓库
+
+1. git init  // 初始化仓库
+2. git add "文件名"  // 添加文件到本地仓库
+3. git commit -m “first commit” //添加文件描述信息
+4. git remote add origin + 远程仓库地址 //链接远程仓库，创建主分支
+5. git push -u origin master //把本地仓库的文件推送到远程仓库
+
+若出现以下问题：
+
+![这里写图片描述](https://img-blog.csdn.net/20180330091437163?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ29uZ3FpbmdsaW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+要想解决以上错误，只需要在4，5之间使用git pull origin master，
+
+1. git remote add origin + 远程仓库地址 //链接远程仓库，创建主分支
+2. git pull origin master // 把本地仓库的变化连接到远程仓库主分支
+3. git push -u origin master //把本地仓库的文件推送到远程仓库
+
+或者，在确保本地没问题的话，直接用 git push -f origin master 强行上传。
