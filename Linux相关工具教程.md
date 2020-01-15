@@ -8,7 +8,7 @@ tmux (terminal multiplexer) 是Linux上的终端复用神器，可从一个屏�
 
 tmux结构包括会话（session）、窗口（window）和窗格（pane）三部分，会话实质是伪终端集合，每个窗格表示一个伪终端，多个窗格展现在一个屏幕上，这一屏幕就是窗口，基本结构及状态信息如下图所示：
 
-![](G:\errors&resolutions_log\tmux.png)
+<img src="G:\errors&amp;resolutions_log\tmux.png" style="zoom:80%;" />
 
 ## tmux基本操作
 
@@ -133,7 +133,23 @@ tmux默认的快捷键前缀是**Ctrl+b**(下文用**prefix**指代)，按下前
 
 ### 在搜索框中输入renderWhitespace,选择all,即可显示空格.
 
-# 3.git
+# 3.Git
+
+Git是目前世界上最先进的分布式版本控制系统，采用C语言编写。
+
+## 3.0 安装Git
+
+**Linux**
+
+sudo apt-get install git
+
+**Windowss**
+
+直接在Git官网下载，或者前往[国内镜像](https://pan.baidu.com/s/1kU5OCOB#list/path=%2Fpub%2Fgit)下载。安装完成后，鼠标右键-->Git Bash，弹出下面命令窗口，即安装成功！
+
+<img src="C:\Users\zp\AppData\Roaming\Typora\typora-user-images\image-20200115165150969.png" alt="image-20200115165150969" style="zoom:80%;" />
+
+
 
 ## 3.1 设置姓名和邮箱
 
@@ -141,6 +157,8 @@ tmux默认的快捷键前缀是**Ctrl+b**(下文用**prefix**指代)，按下前
 git config --global user.name "your name"
 git config --global user.email "youremail@qq.com"
 ```
+
+因为Git是分布式版本控制系统，所以，每个机器必须自报家门：名字和Email地址。
 
 ## 3.2 设置SSH Key，添加公开密钥
 
@@ -175,3 +193,11 @@ linux版本：将在用户目录下~/.ssh/ 生成 id_rsa 和 id_rsa.pub 文件�
 3. git push -u origin master //把本地仓库的文件推送到远程仓库
 
 或者，在确保本地没问题的话，直接用 git push -f origin master 强行上传。
+
+## 3.4 常用命令
+
+git status  // 查看仓库当前状态
+
+git diff  // 查看文件变化
+
+git log  // 显示最近到最远的提交日志
