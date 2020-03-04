@@ -127,6 +127,90 @@ tmux默认的快捷键前缀是**Ctrl+b**(下文用**prefix**指代)，按下前
 
 # 2.vscode
 
+## 2.1 配置python开发环境
+
+###  1）准备工作
+
+安装anaconda、git、VSCode
+
+### 2) 安装扩展
+
+安装Chinese (Simplified)中文简体语言包
+
+安装Python扩展、Path Intellisense、vscode-python-docstring以及Settings Sync用于同步配置
+
+安装完Python扩展后， 按
+
+按Ctrl+Shift+P，输入python→选择解析器，会显示所有环境（conda、venv等），可以选择任何一个作为解析器
+
+![vscode-python conda环境选择](https://code.visualstudio.com/assets/docs/python/environments/interpreters-list.png)
+
+### 3) 配置文件与内置终端设置
+
+对于编辑器、窗口以及扩展等，VSCode都提供了默认配置，用户也可**自定义配置**，具体操作如下。
+
+依次点击 文件→首选项→设置，或者直接`Ctrl+,`打开配置界面，通过右上角的按钮切换到 配置文件（见下图），左侧为默认配置，右侧为用户自定义配置，也可为当前工作区专门配置（会在当前文件夹下创建.vscode/settings.json文件）。
+
+内置终端修改：默认内置终端为powershell，这里改为git bash。在左侧的默认配置项上点击“铅笔”图标可以将当前项复制到右侧进行修改，这里将**内置终端**修改为**git bash**，修改"terminal.integrated.shell.windows"和"terminal.integrated.shellArgs.windows"，如下图所示。
+
+![vscode-settings](https://s2.ax1x.com/2019/01/05/F7Quyn.png)
+
+修改完之后重启VSCode，会发现内置终端变成了bash，就可以使用`ll`等命令、运行sh脚本了，如下图所示。
+
+![F7l7E6.png](https://s2.ax1x.com/2019/01/05/F7l7E6.png)
+
+但是还存在一个问题，cmd激活conda环境的命令是`activate envname`，bash激活conda环境的命令为`source activate envname`，vscode在调试python时会自动调用`activate envname`来激活相应的环境，将默认终端换为bash后，会导致**环境激活不成功**，修改方法是在bash的配置文件中为`source activate`设置别名，具体如下：
+
+- 打开"C:\Program Files\Git\etc\bash.bashrc"
+
+- 在文件末尾加入如下两行：
+
+  alias activate=". $(which activate)" 
+
+  alias deactivate=". $(which deactivate)"
+
+重启vscode就可以了。
+
+### 4）高级调试配置
+
+即launch.json文件，在调试时，通常需要指定命令行参数或者临时环境变量等，这些都可以在launch.json文件中设置：
+
+高级调试配置需要通过VSCode打开文件夹，而不是直接打开文件，具体做法是：
+
+- 在待调试文件所在的文件夹**右键**，选择 **open with code**
+- **调试→添加配置**，会在当前文件夹下生成.vscode文件夹以及**.vscode/launch.json**文件（与工作去设置文件是同一文件夹）
+
+打开launch.json文件，默认配置如下
+
+```python
+{
+    "name": "Python: Current File (Integrated Terminal)",
+    "type": "python",
+    "request": "launch",
+    "program": "${file}",
+    "console": "integratedTerminal"
+},
+```
+
+默认调试当前文件，默认调试终端为Integrated Terminal，即在vscode内置终端中调试。也可指定要launch的文件，直接修改上面"program"的值，将${file}替换为要调试的文件。
+
+此外，还可添加其他配置项，常用的配置选项如下：
+
+- `env`：指定环境变量
+- `envFile`：指定环境变量定义文件，参见[Environment variable definitions file](https://code.visualstudio.com/docs/python/environments#_environment-variable-definitions-file)查看文件格式
+- `args`：指定命令行参数
+
+```python
+"env": {
+    "CUDA_VISIBLE_DEVICES": "0"
+},
+"args": [
+    "--port", "1593"
+]
+```
+
+
+
 ## 显示空格和tab符号
 
 ### 打开setting,在搜索框中输入renderControlCharacters,选中勾选框,即可显示tab
