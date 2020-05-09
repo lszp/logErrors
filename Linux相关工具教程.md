@@ -211,6 +211,22 @@ tmux默认的快捷键前缀是**Ctrl+b**(下文用**prefix**指代)，按下前
 
 
 
+### 2.2  SSH Remote】failed to create hard link '/home/*/.vscode-server/bin/*/*' file exists
+
+1. vscode 连接服务器时，循环要求输入密码，并显示如下错误信息：
+
+   <img src="C:\Users\zp\AppData\Roaming\Typora\typora-user-images\image-20200509164326895.png" alt="image-20200509164326895" style="zoom:67%;" />
+
+2. 解决方案
+
+      解决方案是删除对应硬链接（上图第一段标绿链接）下的同名文件与同名target文件，如下红框部分（图示服务器不同，所以路径有所区别）
+
+      <img src="C:\Users\zp\AppData\Roaming\Typora\typora-user-images\image-20200509164546550.png" alt="image-20200509164546550" style="zoom:80%;" />
+
+      
+      
+      删除后，问题解决！
+
 ## 显示空格和tab符号
 
 ### 打开setting,在搜索框中输入renderControlCharacters,选中勾选框,即可显示tab
