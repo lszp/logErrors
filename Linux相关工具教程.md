@@ -301,3 +301,37 @@ git status  // 查看仓库当前状态
 git diff  // 查看文件变化
 
 git log  // 显示最近到最远的提交日志
+
+# ubuntu
+
+## 1. 桌面环境异常
+
+### 问题
+
+状态栏消失，桌面只剩下壁纸和鼠标指针等；
+
+某一个用户登录进去出现问题， 而另一个用户登录进去桌面环境正常
+
+### 原因
+
+Compiz配置出了问题。Compiz是一套自由的桌面特效软件，能够基于Linux的桌面环境增加视觉特效。
+
+### 解决方法
+
+1. 删除compiz的配置文件
+
+   ```bash
+   $ rm -rf ~/.compiz* ~/.config/compiz* ~/.cache/compiz* ~/.gconf/apps/compiz* ~/.config/dconf ~/.cache/dconf ~/.cache/unity  #删除dconf配置信息
+   $ dconf reset -f /org/compiz/  #重置Compiz
+   $ setsid unity #重启Unity
+   $ unity --reset-icons #重置Unity图标(可选)
+   ```
+
+2. 如果还不行，重装Ubuntu-desktop
+
+   ```bash
+   $ sudo apt-get install --reinstall ubuntu-desktop
+   $ sudo service lightdm restart
+   ```
+
+   
