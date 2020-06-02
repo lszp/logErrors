@@ -211,7 +211,7 @@ tmux默认的快捷键前缀是**Ctrl+b**(下文用**prefix**指代)，按下前
 
 
 
-### 2.2  SSH Remote】failed to create hard link '/home/*/.vscode-server/bin/*/*' file exists
+## 2.2  SSH Remote】failed to create hard link '/home/*/.vscode-server/bin/*/*' file exists
 
 1. vscode 连接服务器时，循环要求输入密码，并显示如下错误信息：
 
@@ -302,7 +302,7 @@ git diff  // 查看文件变化
 
 git log  // 显示最近到最远的提交日志
 
-# ubuntu
+# 4.ubuntu
 
 ## 1. 桌面环境异常
 
@@ -334,4 +334,148 @@ Compiz配置出了问题。Compiz是一套自由的桌面特效软件，能够�
    $ sudo service lightdm restart
    ```
 
-   
+# 5.Mysql
+
+## 5.1 ubuntu 安装mysql
+
+1) 命令行输入命令
+
+```bash
+sudo apt-get install mysql-server
+```
+
+![如何在Ubuntu14.04中安装mysql](http://p1.pstatp.com/large/pgc-image/153585556245159dcdebcf9)
+
+2) 如果之前已经安装过MySQL的话，此时如果碰到有新版本的MySQL，会出现需要配置的情况，如下图所示； 这里如果不设置新密码的话，则密码和之前的MySQL一致；如果你想设置新的密码，则输入新密码即可。
+
+![如何在Ubuntu14.04中安装mysql](http://p1.pstatp.com/large/pgc-image/1535855562387e539246fea)
+
+3） 在这里重新设置新密码，接下来弹出再次输入新密码的窗口，如下图所示。设置完成之后，点击“ok”即可，
+
+![如何在Ubuntu14.04中安装mysql](http://p1.pstatp.com/large/pgc-image/1535855562383114734f631)
+
+4） 等待MySQL安装完成，完成之后，如下图所示。
+
+![如何在Ubuntu14.04中安装mysql](http://p1.pstatp.com/large/pgc-image/15358555624895cc280f57d)
+
+5） 此时通过命令：ps aux | grep mysqld，进行查看，看mysql是否已经启动。
+
+![如何在Ubuntu14.04中安装mysql](http://p3.pstatp.com/large/pgc-image/15358555624846c4ca7f774)
+
+6）mysql启动完成之后，可以在命令行中输入命令：mysql –u root –p，之后输入之前设置的密码，即可进入到MySQL数据库。
+
+![如何在Ubuntu14.04中安装mysql](http://p1.pstatp.com/large/pgc-image/1535855562560fad569cd1d)
+
+7）接下来就可以正常使用MySQL了，增删改查等操作都可以正常进行，如下图所示
+
+![如何在Ubuntu14.04中安装mysql](http://p1.pstatp.com/large/pgc-image/1535855562572bdbb9be5d1)
+
+8）如果想退出MySQL数据库，直接输入“exit”或者“quit”即可。
+
+## 5.2 修改root 密
+
+**已知密码**
+
+1)  修改密码
+
+```bash
+sudo mysqladmin -u root -p password
+```
+
+2）重启mysql服务
+
+```bash
+sudo service mysql restart
+```
+
+**忘记密码，重置密码**
+
+在介绍修改密码之前，先介绍一个文件/etc/mysql/debian.cnf.其主要内容如下图：
+
+![img](https://img-blog.csdn.net/2018050114213631)
+
+里面有一个debian-sys-maint用户，这个用户只有Debian或Ubuntu服务器才有，所以如果您的服务器是Debain或Ubuntu，debian-sys-maint是个Mysql安装之后自带的用户，具体作用是重启及运行mysql服务。所以如果忘了root密码，可以通过这个用户来重设密码。下面介绍具体操作：
+1）进入/etc/mysql/目录，并用root权限打开debian.cnf文件
+
+```bash
+cd /etc/mysql
+sudo vim debian.cnf
+```
+
+2）使用这个文件中的用户名和密码进入mysql
+
+```bash
+mysql -u debian-sys-maint -p
+```
+
+3）选择mysql数据库（用户名和密码均存储在此数据库的user表中）
+
+```mysql
+use mysql;
+```
+
+4）显示user表中的列
+
+```mysql
+show fields from user; 
+```
+
+![img](https://img-blog.csdn.net/20180501142229412)
+
+authentication_string这列就是密码（注：以前的版本这个字段是password,如果是password下面的操作将authentication_string替换成password即可）
+
+5) 修改密码（修改密码为：123456）
+
+```mysql
+update mysql.user set authentication_string=password('123456') where user='root'
+```
+
+6）退出sql，重启mysql
+
+```mysql
+exit
+```
+
+```bash
+service mysql restart
+```
+
+## 5.3 修改port
+
+```bash
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+修改mysqld.cnf文件里的port即可
+
+重启mysql服务
+
+## 5.4 添加用户
+
+1） 进入mysql
+
+```mysql
+sudo mysql -u root -p
+```
+
+2) 添加用户
+
+```mysql
+insert into mysql.user(Host,User,authentication_string) values("localhost","test",password("123456"));
+```
+
+## 5.5 安装 <mysql/mysql.h>头文件
+
+```bash
+sudo apt-get install libmysql++-dev
+```
+
+# FFmpeg
+
+## 1. 解码视频为视频帧
+
+```bash
+ffmpeg -i input.mp4 -vf fps=1 ./frames/frame%d.png
+```
+
+按照每秒一帧的帧率提取视频帧
