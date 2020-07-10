@@ -433,6 +433,115 @@ root@Ubuntu2:/home/zhangkf sudo du -sh /home/*
 38G	/home/zhangkf
 3.3M	/home/zhenjz
 
+## 4.3  循环登录 || An error occurred while performing the step : " Building kernel modules
+
+[参考链接](https://blog.csdn.net/TaylorMei/article/details/79133369?utm_source=blogxgwz2)
+
+**ubuntu 16.04 循环登录问题解决办法**
+
+问题描述：Ubuntu16.04系统，在某次重启之后发现循环登录，或者分辨率变小（显示的非常大）。
+
+问题原因：NVIDIA驱动出现了问题，可能由很多原因引起。
+
+**解决方法：**
+
+（1）进入文本模式：CTRL+ALT+F1
+（2）Uninstall any previous drivers :
+
+```bash
+sudo apt-get remove nvidia-*
+sudo apt-get autoremove
+```
+
+（3）Uninstall the drivers from the .run file :
+
+```bash
+sudo nvidia-uninstall
+```
+
+（4）此时，重启可login normally.
+（5）驱动重新安装：
+
+```bash
+Ctrl+Alt+F1
+sudo service lightdm stop
+sudo ./NVIDIA-Linux-x86_64-381.22.run -no-x-check -no-nouveau-check -no-opengl-files
+```
+
+（6）sudo service lightdm restart（可正常登录）
+（7）重启不会出现循环登录
+
+安装NVIDIA显卡驱动是可能遇到的问题：
+
+出现：ERROR : An error occurred while performing the step : ” Building kernel modules “. See /var/log/nvidia-installer.log for details.
+
+问题原因：Linix系统的内核是在不断更新的，而安装的NVIDIA驱动是之前下载好的，没有更新，因此安装过程中无法创建内核。
+
+解决方法：
+Google上有人提出下载patch来解决，但是比较麻烦。最高效的方法是下载最新版的显卡驱动（选择对应的版本）。下载地址：http://www.nvidia.cn/Download/index.aspx?lang=cn.
+
+## 4.4 mount挂载磁盘并设置开机自动mount
+
+总的命令流程如下：
+
+```bash
+fdisk -l                       # 查看可挂载的磁盘
+df -h                          # 查看已经挂载的磁盘
+mkfs.ext4 /dev/vdb             # 初始化磁盘,格式是ext4,注意这里会格式化可挂载磁盘
+mount /dev/vdb /u01            # mount 磁盘到/u01，保证/u01为空
+blkid                          # 获取磁盘的uuid和属性，用uuid来进行开机mount
+vim /etc/fstab                 # 开机mount，模板是UUID=********** /u01  ext4  defaults  1 1
+```
+
+- 第一步先 fdisk -l ，查看可挂载的磁盘都有哪些
+
+  ![img](https://img-blog.csdn.net/20180731110535361?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vY2hvdTExMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+  可以看到上面有两个磁盘，这时候再df -h 查看已经挂载了哪些磁盘
+
+  ![img](https://img-blog.csdn.net/20180731110630960?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vY2hvdTExMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+  只挂载了其中一个小的，这时候我们就可以挂载那个/dev/vdb 大磁盘了 
+
+  ```bash
+  mount /dev/vdb /u01 
+  ```
+
+  注意这个u01这个文件夹一定要是空的，不然挂载上去之前u01里面的东西就无法显示，所以一般mount时都是新建一个文件夹，总之就是要保证它为空
+
+  我们要格式化磁盘  
+
+  ```bash
+  mkfs.ext4 /dev/vdb
+  ```
+
+  ![img](https://img-blog.csdn.net/2018073111125418?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vY2hvdTExMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+  再mount 即可   mount /dev/vdb /u01
+
+- 这样mount完之后还要设置开机自动mount，不然重启之后还需要再mount比较麻烦
+
+  我们采用uuid的方式进行开机mount
+
+  用 blkid 获取磁盘的uuid和属性
+
+  ![img](https://img-blog.csdn.net/20180731111531602?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vY2hvdTExMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+  vim /etc/fstab
+
+  配置模板：UUID=************* /u01 ext4 defaults 1 1
+
+- 如果磁盘之前有过扩容，想让扩容后的磁盘生效，则需要先重启服务器，umount掉挂载的文件夹(umount dir_name)，执行
+
+  ```bash
+  e2fsck -f /dev/vdb   # 诊治数据磁盘，返回磁盘信息
+  resize2fs /dev/vdb   # 重置数据磁盘大小
+  ```
+
+  之后再重新进行上述的mount，不用担心，重新mount 数据不会丢失
+
+  
+
 # 5.Mysql
 
 ## 5.1 ubuntu 安装mysql
@@ -1059,3 +1168,13 @@ pdb.set_trace()
 
   docker exec -it myflow /bin/bash
 
+# Tensorflow
+
+##  启动tensorboard
+
+cd "your logdir"
+tensorboard --logdir ./ --host="IP"
+
+## 利用anaconda安装tensorflow-gpu==1.13.1
+
+conda install tensorflow-gpu==1.13.1
