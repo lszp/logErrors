@@ -227,6 +227,38 @@ tmux默认的快捷键前缀是**Ctrl+b**(下文用**prefix**指代)，按下前
       
       删除后，问题解决！
 
+## 2.2  ssh 连接远程服务器 warning: remote host identification has changed!
+
+vscode连接服务器时，出现以下问题
+
+```bash
+~ ⌚ 22:49:52
+$ ssh zhangpan@192.168.1.105
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ECDSA key sent by the remote host is
+SHA256:8hgJ8jpcBr1tm6HS72FpXwMrjba8MQqlqYJQLPB/Qf4.
+Please contact your system administrator.
+Add correct host key in c:/user/zp/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in c:/user/zp/.ssh/known_hosts :26
+ECDSA host key for 192.168.1.105 has changed and you have requested strict checking.
+Host key verification failed.
+```
+
+看到错误日志有一句
+
+```
+Add correct host key in c:/user/zp/.ssh/known_hosts to get rid of this message.
+```
+
+编辑c:/user/zp/.ssh/known_hosts文件，删除192.168.1.105开头的内容即可。
+
+原因可能是远程服务器重装了系统。
+
 ## 2.3显示空格和tab符号
 
 ### 打开setting,在搜索框中输入renderControlCharacters,选中勾选框,即可显示tab
